@@ -1,13 +1,15 @@
+import SendIcon from '@mui/icons-material/Send';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
+import HttpService from '../services/HttpService';
 import { formatDate } from '../utils';
 import { Button } from './UI/button/';
 import { Chart } from './UI/Chart/';
 import { getConfigForChart } from './UI/Chart/config';
 import { DatePicker } from './UI/DatePicker/';
-import { Select } from './UI/select/';
 import { Loader } from './UI/Loader';
-
-import HttpService from '../services/HttpService';
+import { Select } from './UI/select/';
 
 import { useFetching } from '../hooks/useFetching';
 
@@ -56,9 +58,8 @@ export const CurrencyForPeriod = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const changeDate = ({ target }) => {
-    const { value, name } = target;
-    setPeriod({ ...period, [name]: value });
+  const changeDate = (date, name) => {
+    setPeriod({ ...period, [name]: formatDate(new Date(date), 'yyyy-MM-dd') });
   };
 
   const changeSelect = ({ target }) => {
@@ -68,21 +69,52 @@ export const CurrencyForPeriod = () => {
     setCurrentCurrency({ id, name });
   };
 
-  return isLoadingCurrenciesForPeriod ? (
-    <Loader />
-  ) : (
-    <section>
-      <DatePicker name={'startDate'} date={period.startDate} onChange={changeDate} />
-      <DatePicker name={'endDate'} date={period.endDate} onChange={changeDate} />
-      <Select
-        idCurrentCurrency={currentCurrency.id}
-        name={currentCurrency.name}
-        onChange={changeSelect}
-        defaultValue={currentCurrency.name}
-        options={idAndAbbreviation}
-      />
-      <Button onClick={loadDataCurrencyForPeriod}>Запрос</Button>
-      <Chart data={optionsForChart} />
-    </section>
+  return (
+    <Box component="section" sx={{ mb: 3 }}>
+      <Typography variant="h4" component="h4" textAlign="center">
+        Курс валют за период
+      </Typography>
+
+      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between', mb: 2, mt: 2 }}>
+        <Box sx={{ display: 'flex', gap: 1, justifyContent: 'start', maxWidth: 0.5 }}>
+          <DatePicker
+            label="C"
+            name="startDate"
+            value={period.startDate}
+            onChange={(date) => changeDate(date, 'startDate')}
+            inputFormat="yyyy-MM-dd"
+            styleBox={{ maxWidth: 0.5,minWidth: 150 }}
+            sx={{minWidth: 150}}
+            maxDate={formatDate(new Date(), 'yyyy-MM-dd')}
+          />
+          <DatePicker
+            label="По"
+            name="endDate"
+            value={period.endDate}
+            onChange={(date) => changeDate(date, 'endDate')}
+            inputFormat="yyyy-MM-dd"
+            sx={{minWidth: 150}}
+            styleBox={{ maxWidth: 0.5,minWidth: 150 }}
+            maxDate={formatDate(new Date(), 'yyyy-MM-dd')}
+          />
+        </Box>
+        <Select
+          idCurrentCurrency={currentCurrency.id}
+          name={currentCurrency.name}
+          onChange={changeSelect}
+          value={currentCurrency.name}
+          options={idAndAbbreviation}
+        />
+        <Button
+          style={{ display: 'flex', margin: '10px 10px' }}
+          variant="contained"
+          endIcon={<SendIcon />}
+          onClick={loadDataCurrencyForPeriod}
+        >
+          Запрос
+        </Button>
+      </Box>
+      {isLoadingCurrenciesForPeriod ? <Loader /> : <Chart data={optionsForChart} />}
+    </Box>
   );
 };

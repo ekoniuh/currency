@@ -1,1 +1,1 @@
-export { Select } from './Select';
+export { BasicSelect as Select } from './Select';

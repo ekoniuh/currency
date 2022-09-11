@@ -1,15 +1,14 @@
 import { formatDate } from '../utils';
-import { CurrencyForDay, CurrencyForPeriod, Converter } from '../components/';
+// import { CurrencyRateForDay, CurrencyRateForPeriod, Converter } from '../components/';
+import { format } from 'date-fns';
 
-const configComponents = [
-  { id: 1, Component: CurrencyForDay, isShow: true },
-  { id: 2, Component: CurrencyForPeriod, isShow: false },
-  { id: 3, Component: Converter, isShow: false },
-];
+export const isShowPage = ['CurrencyRateForDay'];
 
 export const INITIAL_PARAMS_PAGE = {
-  selectComponents: configComponents,
-  day: formatDate(new Date()),
-  startDay: '',
-  endDay: '',
+  isShowPage,
+  day: format(new Date(), 'yyyy-MM-dd'),
+  idCurrency: 431,
+  nameCurrency: 'USD',
+  startDate: format(new Date(new Date().setMonth(new Date().getMonth() - 1)), 'yyyy-MM-dd'),
+  endDate: format(new Date(), 'yyyy-MM-dd'),
 };

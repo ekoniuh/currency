@@ -36,21 +36,24 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export function BasicSelect({ options, value, name, id, onChange }) {
+export function BasicSelect({ options, value, onChange }) {
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
-        <InputLabel id="select-currency">Валюта</InputLabel>
+        <InputLabel id="select-Currency">Валюта</InputLabel>
         <Select
-          labelId="select-currency"
+          labelId="select-Currency"
           value={value}
           label="Валюта"
           renderValue={(selected) => (!selected ? <em>Выберите</em> : selected)}
           onChange={onChange}
           MenuProps={MenuProps}
         >
+          <MenuItem value={value}>
+            <em>{value}</em>
+          </MenuItem>
           {options.map(({ id, name }) => (
-            <MenuItem key={id} value={name} id={id} style={getStyles(name, value)}>
+            <MenuItem key={id} value={name} style={getStyles(name, value)}>
               {name}
             </MenuItem>
           ))}

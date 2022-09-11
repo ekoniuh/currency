@@ -17,7 +17,7 @@ export default class HttpService {
     return response;
   }
 
-  static async getDataCurrencyForPeriod(id, startDate, endDate) {
+  static async getDataCurrencyRateForPeriod(id, startDate, endDate) {
     const response = await axios.get(`${BASE_URL}/dynamics/${id}`, {
       params: { startDate, endDate },
     });

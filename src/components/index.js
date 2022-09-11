@@ -1,5 +1,5 @@
 export { Header } from './Header';
-export { Currency } from './Currency';
-export { CurrencyForDay } from './CurrencyForDay';
-export { CurrencyForPeriod } from './CurrencyForPeriod';
+export { CurrencyBox } from './CurrencyBox';
+export { CurrencyRateForDay } from './CurrencyRateForDay';
+export { CurrencyRateForPeriod } from './CurrencyRateForPeriod';
 export { Converter } from './Converter';

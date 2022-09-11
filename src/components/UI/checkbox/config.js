@@ -1,11 +1,11 @@
 const configCheckBoxes = [
   {
-    key: 'CurrencyForDay',
+    key: 'CurrencyRateForDay',
     label: 'Курс валют',
   },
 
   {
-    key: 'CurrencyForPeriod',
+    key: 'CurrencyRateForPeriod',
     label: 'Курс валют за период',
   },
   {

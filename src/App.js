@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
-import { Currency, Header } from './components/';
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { CurrencyBox, Header } from './components/';
 import { Loader } from './components/UI/Loader';
 import { INITIAL_PARAMS_PAGE } from './constants/';
 import { QueryContext } from './context';
@@ -10,52 +10,57 @@ import { formatDate } from './utils';
 
 function App() {
   const [paramsPage, setParamsPage] = useState(INITIAL_PARAMS_PAGE);
-  // let location = useLocation();
-  // let history = useHistory();
+  let { search } = useLocation();
+  let navigate = useNavigate();
 
-  // to={{
-  //   pathname: "/login",
-  //   search: "?utm=your+face",
-  //   state: { referrer: currentLocation }
-  // }}
   const value = useMemo(() => ({ paramsPage, setParamsPage }), [paramsPage, setParamsPage]);
-  // console.log(location.search);
+
+  useEffect(() => {
+    const query = queryString.parse(search, { parseNumbers: true });
+
+    setParamsPage((prevState) => ({
+      ...prevState,
+      ...INITIAL_PARAMS_PAGE,
+      ...query,
+    }));
+  }, [search]);
+
+  useEffect(() => {
+    if (search) return;
+    navigate({
+      search: createSearchParams(INITIAL_PARAMS_PAGE).toString(),
+    });
+
+    setParamsPage({ ...INITIAL_PARAMS_PAGE });
+  }, []);
+
   // useEffect(() => {
-  //   if (!location.search) {
-  //     const objWithQueryData = { day: formatDate(new Date()), isShow: ['CurrencyForDay'] };
+  //   if (!search) {
+  //     navigate({
+  //       search: createSearchParams(INITIAL_PARAMS_PAGE).toString(),
+  //     });
 
-  //     history.pushState(
-  //       {},
-  //       '',
-  //       `?${queryString.stringify(objWithQueryData, {
-  //         skipEmptyString: true,
-  //       })}`
-  //     );
-
-  //     setParamsPage((prevState) => ({
-  //       ...prevState,
-  //       day: formatDate(new Date()),
-  //     }));
+  //     setParamsPage({ ...INITIAL_PARAMS_PAGE });
   //   } else {
-  //     const query = queryString.parse(location.search, { parseBooleans: true });
+  //     const query = queryString.parse(search, { parseNumbers: true });
 
   //     setParamsPage((prevState) => ({
   //       ...prevState,
+  //       ...INITIAL_PARAMS_PAGE,
   //       ...query,
   //     }));
   //   }
   // }, []);
 
-  // if (!paramsPage.day) {
-  //   return <Loader />;
-  // }
+  if (!search) {
+    return <Loader />;
+  }
 
-  console.log(paramsPage);
-
+  // console.log('paramsPage', paramsPage);
   return (
     <QueryContext.Provider value={value}>
       <Header />
-      <Currency />
+      <CurrencyBox />
     </QueryContext.Provider>
   );
 }

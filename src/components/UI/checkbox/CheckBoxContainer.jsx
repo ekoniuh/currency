@@ -86,7 +86,9 @@ export const CheckBoxContainer = () => {
           ))}
         </FormGroup>
       </FormControl>
-      <Box sx={{ mt: 1, m: 1, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row' }}>
+      <Box
+        sx={{ mt: 1, m: 1, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', flexDirection: 'row', gap: 2 }}
+      >
         <Box>
           <Tooltip title="Используемый браузер">
             <Chip label={nameBrowser} variant="outlined" sx={{ fontSize: 16, color: 'white' }} />

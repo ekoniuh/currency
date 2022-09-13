@@ -2,7 +2,9 @@ import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
+import queryString from 'query-string';
 import React, { useContext, useEffect, useState } from 'react';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { QueryContext } from '../context';
 import { useFetching } from '../hooks/useFetching';
 import HttpService from '../services/HttpService';
@@ -10,8 +12,6 @@ import { Button } from './UI/button';
 import { DatePicker } from './UI/DatePicker';
 import { Loader } from './UI/Loader';
 import { Table } from './UI/Table';
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import queryString from 'query-string';
 
 export const CurrencyRateForDay = () => {
   const { paramsPage, setParamsPage } = useContext(QueryContext);
@@ -24,7 +24,7 @@ export const CurrencyRateForDay = () => {
 
   const [date, setDate] = useState(query?.day ?? paramsPage.day);
 
-  const [fetchCurrencies, isLoading, error] = useFetching(async () => {
+  const [fetchCurrencies, isLoading, errorCurrencies] = useFetching(async () => {
     const response = await HttpService.getDataCurrenciesForDay(date);
     setDataForOneDay([...response.data]);
   });
@@ -35,10 +35,6 @@ export const CurrencyRateForDay = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   setDate(query?.day ?? paramsPage.day);
-  // }, []);
 
   const changeDate = (date) => {
     const day = format(new Date(date), 'yyyy-MM-dd');
@@ -52,13 +48,17 @@ export const CurrencyRateForDay = () => {
       day,
     }));
   };
-  // console.log(paramsPage.day);
 
   return (
     <Box component="section">
       <Typography variant="h4" component="h4" textAlign="center" sx={{ mb: 3 }}>
         Курс валют за день
       </Typography>
+      {errorCurrencies && (
+        <Typography variant="h4" component="h4" textAlign="center">
+          Ошибка запроса для получения всех валют{errorCurrencies}
+        </Typography>
+      )}
       <Box sx={{ display: 'flex', maxWidth: 0.6, justifyContent: 'space-around', m: 'auto' }}>
         <DatePicker
           label="Выберите день"

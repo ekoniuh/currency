@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
-import { QueryContext } from '../context';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import queryString from 'query-string';
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { Converter } from './Converter';
 import { CurrencyRateForDay } from './CurrencyRateForDay';
 import { CurrencyRateForPeriod } from './CurrencyRateForPeriod';
-import { Converter } from './Converter';
 
 const configComponents = {
   CurrencyRateForDay,
@@ -15,14 +15,15 @@ const configComponents = {
 
 export const CurrencyBox = () => {
   let { search } = useLocation();
-  const {
-    paramsPage: { selectComponents },
-  } = useContext(QueryContext);
 
   const query = queryString.parse(search, { parseNumbers: true });
 
   if (!query?.isShowPage) {
-    return 'выберите компонент';
+    return (
+      <Typography variant="h4" component="h2">
+        Выберите один из пунктов в меню
+      </Typography>
+    );
   }
 
   const arrayWithNamesComponents = typeof query?.isShowPage === 'string' ? [query.isShowPage] : query.isShowPage;

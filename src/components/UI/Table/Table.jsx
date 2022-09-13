@@ -7,26 +7,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-// export const Table = ({ currencies }) => {
-//   return (
-//     <div>
-//       <table>
-//         {currencies.map(({ Cur_ID, Cur_Abbreviation, Cur_OfficialRate, Cur_Name }) => {
-//           return (
-//             <tr key={Cur_ID}>
-//               <th>
-//                 {Cur_Name}
-//                 {Cur_Abbreviation}
-//               </th>
-//               <td>{Cur_OfficialRate}</td>
-//             </tr>
-//           );
-//         })}
-//       </table>
-//     </div>
-//   );
-// };
-
 export function BasicTable({ currencies }) {
   return (
     <TableContainer component={Paper} sx={{ mb: 4, mt: 4 }}>

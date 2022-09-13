@@ -4,20 +4,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import React from 'react';
-// export const Select = ({ options, defaultValue, name, id, onChange }) => {
-//   return (
-//     <select value={name} id={id} onChange={onChange}>
-//       <option value={name} id={id}>
-//         {defaultValue}
-//       </option>
-//       {options.map((option) => (
-//         <option key={option.id} value={option.name} id={option.id}>
-//           {option.name}
-//         </option>
-//       ))}
-//     </select>
-//   );
-// };
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -36,7 +22,8 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export function BasicSelect({ options, value, onChange }) {
+export function BasicSelect({ options, id, value, onChange }) {
+  
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>

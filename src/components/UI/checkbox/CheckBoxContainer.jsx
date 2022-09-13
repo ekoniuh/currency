@@ -1,10 +1,15 @@
+import CopyAllIcon from '@mui/icons-material/CopyAll';
+import ShareIcon from '@mui/icons-material/Share';
 import { Box, Button, Fade, Paper, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
 import { pink } from '@mui/material/colors';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import FormHelperText from '@mui/material/FormHelperText';
+import IconButton from '@mui/material/IconButton';
+import Popper from '@mui/material/Popper';
+import Tooltip from '@mui/material/Tooltip';
 import queryString from 'query-string';
 import React, { useContext, useEffect, useState } from 'react';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
@@ -12,18 +17,11 @@ import { QueryContext } from '../../../context';
 import configCheckBoxes from './config';
 import { getNameBrowser } from './getNameBrowser';
 import { updateArrayCheckbox } from './updateArrayCheckbox';
-import Chip from '@mui/material/Chip';
-import ShareIcon from '@mui/icons-material/Share';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Popper from '@mui/material/Popper';
-import CopyAllIcon from '@mui/icons-material/CopyAll';
 
 const configComponents = ['CurrencyRateForDay', 'CurrencyRateForPeriod', 'Converter'];
 
 export const CheckBoxContainer = () => {
   const { paramsPage, setParamsPage } = useContext(QueryContext);
-  const { isShowPage } = paramsPage;
   const [arrayPages, setArrayPages] = useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
@@ -38,10 +36,10 @@ export const CheckBoxContainer = () => {
   const query = queryString.parse(search, { parseNumbers: true });
 
   useEffect(() => {
-    const tempArrayPages = typeof isShowPage === 'string' ? [isShowPage] : isShowPage;
     const tempArrayQuery = typeof query?.isShowPage === 'string' ? [query?.isShowPage] : query?.isShowPage;
 
-    setArrayPages(tempArrayQuery ?? tempArrayPages);
+    setArrayPages(tempArrayQuery ?? []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const changeCheckBox = (position) => {
@@ -59,7 +57,7 @@ export const CheckBoxContainer = () => {
 
   const handleClick = (newPlacement) => (event) => {
     setAnchorEl(event.currentTarget);
-    setOpen((prev) => placement !== newPlacement || !prev);
+    setOpen((prev) => !prev);
     setPlacement(newPlacement);
   };
 
@@ -102,9 +100,17 @@ export const CheckBoxContainer = () => {
                   <Typography sx={{ p: 2, whiteSpace: 'nowrap', overflow: 'hidden ', textOverflow: 'ellipsis' }}>
                     {window.location.href}
                   </Typography>
-                  <IconButton sx={{ width: 30, height: 30 }} aria-label="delete">
-                    <CopyAllIcon />
-                  </IconButton>
+                  <Tooltip title="Скопировать ссылку">
+                    <IconButton
+                      onClick={() => {
+                        navigator.clipboard.writeText(window.location.href);
+                      }}
+                      sx={{ width: 30, height: 30 }}
+                      aria-label="delete"
+                    >
+                      <CopyAllIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </Paper>
             </Fade>

@@ -1,20 +1,20 @@
 import SendIcon from '@mui/icons-material/Send';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { format } from 'date-fns';
+import queryString from 'query-string';
 import React, { useContext, useEffect, useState } from 'react';
 import HttpService from '../services/HttpService';
-import { formatDate } from '../utils';
 import { Button } from './UI/button';
 import { Chart } from './UI/Chart';
 import { getConfigForChart } from './UI/Chart/config';
 import { DatePicker } from './UI/DatePicker';
 import { Loader } from './UI/Loader';
 import { Select } from './UI/select';
-import queryString from 'query-string';
 
-import { useFetching } from '../hooks/useFetching';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { QueryContext } from '../context';
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useFetching } from '../hooks/useFetching';
 
 export const CurrencyRateForPeriod = () => {
   const { paramsPage, setParamsPage } = useContext(QueryContext);
@@ -37,7 +37,7 @@ export const CurrencyRateForPeriod = () => {
   const [idAndAbbreviation, setIdAndAbbreviation] = useState([]);
   const [optionsForChart, setOptionsForChart] = useState([]);
 
-  const [fetchCurrencies, isLoadingCurrencies, errorCurrencies] = useFetching(async () => {
+  const [fetchCurrencies, errorCurrencies] = useFetching(async () => {
     const response = await HttpService.getDataCurrencies();
     setIdAndAbbreviation(
       [...response.data].map((item) => {
@@ -65,7 +65,7 @@ export const CurrencyRateForPeriod = () => {
   }, []);
 
   const changeDate = (date, name) => {
-    const formattedDate = formatDate(new Date(date), 'yyyy-MM-dd');
+    const formattedDate = format(new Date(date), 'yyyy-MM-dd');
 
     navigate({
       search: createSearchParams({ ...paramsPage, [name]: formattedDate }).toString(),
@@ -99,6 +99,16 @@ export const CurrencyRateForPeriod = () => {
       <Typography variant="h4" component="h4" textAlign="center">
         Курс валют за период
       </Typography>
+      {errorCurrencies && (
+        <Typography variant="h4" component="h4" textAlign="center">
+          Ошибка запроса для получения всех валют{errorCurrencies}
+        </Typography>
+      )}
+      {errorCurrenciesForPeriod && (
+        <Typography variant="h4" component="h4" textAlign="center">
+          Ошибка запроса для получения всех валют за период{errorCurrenciesForPeriod}
+        </Typography>
+      )}
 
       <Box
         sx={{
@@ -131,7 +141,7 @@ export const CurrencyRateForPeriod = () => {
             sx={{ minWidth: 150 }}
             styleBox={{ minWidth: 150 }}
             minDate={period.startDate}
-            maxDate={formatDate(new Date(), 'yyyy-MM-dd')}
+            maxDate={format(new Date(), 'yyyy-MM-dd')}
           />
         </Box>
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between', maxWidth: 0.5 }}>

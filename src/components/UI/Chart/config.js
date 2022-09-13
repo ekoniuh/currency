@@ -1,4 +1,4 @@
-import { formatDate } from '../../../utils';
+import { format } from 'date-fns';
 
 export function getConfigForChart(data) {
   const isEmptyArray = data.length > 0;
@@ -17,7 +17,7 @@ export function getConfigForChart(data) {
       text: 'Данные валюты',
     },
     xAxis: {
-      categories: isEmptyArray ? data.map((item) => formatDate(new Date(item.Date))) : null,
+      categories: isEmptyArray ? data.map((item) => format(new Date(item.Date), 'yyyy-MM-dd')) : null,
       type: 'datetime',
     },
     yAxis: {
